@@ -1,3 +1,4 @@
+const { default: axios } = require("axios");
 const express = require("express");
 const session = require("express-session");
 const { default: mongoose } = require("mongoose");
@@ -8,7 +9,6 @@ const path = require("path");
 require("dotenv").config();
 const router = express();
 const User = require("../schemas/User");
-
 const googleCredentials = {
   web: {
     client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
@@ -90,7 +90,17 @@ router.get("/", (req, res) => {
 });
 
 router.get("/getuser", (req, res, next) => {
-  User.find()
+  //   axios({
+  //     method: "get",
+  //     url: `${process.env.WEB_HOST}/getuser`,
+  //   }).then((response) => {
+  //     console.log(response.data);
+  //   });
+  User.findOne({
+    email:
+      req.email == "june0623@dgsw.hs.kr" ? req.email : "june0623@dgsw.hs.kr",
+  })
+    //   User.find()
     .then((users) => {
       res.json(users);
     })

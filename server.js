@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const passport = require("passport");
 const session = require("express-session");
+require("dotenv").config();
 
 app.use(cors());
 app.use(bodyParser.json());
