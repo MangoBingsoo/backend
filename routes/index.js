@@ -4,6 +4,7 @@ const path = require("path");
 
 router.get("/", function (req, res, next) {
   res.sendFile(path.join(__dirname, "..", "index.html"));
+  //이부분이 가장 처음 화면
 });
 
 // router.get('*', (req,res) => {

@@ -86,6 +86,7 @@ router.get(
 
 router.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "testlogin.html"));
+  //이부분을 메인화면으로 수정 부탁함
 });
 
 router.get("/getuser", (req, res, next) => {
