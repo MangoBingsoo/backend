@@ -6,11 +6,8 @@ const passport = require("passport"),
   GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 const path = require("path");
 require("dotenv").config();
-const app = express();
-const User = require("./schemas/User");
-const db = require("./mongodb");
-
-db();
+const router = express();
+const User = require("../schemas/User");
 
 const googleCredentials = {
   web: {
@@ -20,8 +17,8 @@ const googleCredentials = {
   },
 };
 
-app.use(express.urlencoded({ extended: false }));
-app.use(
+router.use(express.urlencoded({ extended: false }));
+router.use(
   session({
     secret: "keyboard cat",
     resave: false,
@@ -30,7 +27,7 @@ app.use(
   })
 );
 
-app.use(passport.initialize());
+router.use(passport.initialize());
 
 passport.serializeUser((user, done) => {
   done(null, user);
@@ -73,25 +70,36 @@ passport.use(
 );
 
 //구글 로그인 버튼 클릭시 구글 페이지로 이동하는 역할
-app.get(
-  "/auth/google",
+router.get(
+  "/google",
   passport.authenticate("google", { scope: ["email", "profile"] })
 );
 
 //구글 로그인 후 자신의 웹사이트로 돌아오게될 주소 (콜백 url)
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/auth/login" }),
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { failureRedirect: "login" }),
   function (req, res) {
     res.redirect("/");
   }
 );
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "testlogin.html"));
+router.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "testlogin.html"));
 });
 
-app.get("/auth/logout", (req, res, next) => {
+router.get("/getuser", (req, res, next) => {
+  User.find()
+    .then((users) => {
+      res.json(users);
+    })
+    .catch((err) => {
+      console.error(err);
+      next(err);
+    });
+});
+
+router.get("/logout", (req, res, next) => {
   req.session.destroy((err) => {
     if (err) next(err);
     req.logOut();
@@ -100,9 +108,9 @@ app.get("/auth/logout", (req, res, next) => {
   });
 });
 
-app.use((err, req, res, next) => {
+router.use((err, req, res, next) => {
   if (err) console.log(err);
   res.send(`error : ${err}`);
 });
 
-app.listen(8006, () => console.log("http://localhost:8006"));
+module.exports = router;
