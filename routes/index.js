@@ -13,5 +13,6 @@ router.get("/", function (req, res, next) {
 
 router.use("/question", require("./questions"));
 router.use("/auth", require("./auth"));
+router.use("/calender", require("./calender"));
 
 module.exports = router;

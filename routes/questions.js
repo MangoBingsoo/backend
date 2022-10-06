@@ -31,7 +31,10 @@ router.post("/postqu", (req, res, next) => {
 });
 
 router.patch("/:question", (req, res, next) => {
-  Comment.update({ id: req.params.id }, { comment: req.body.comment })
+  Question.update(
+    { question: req.params.question },
+    { answer: req.body.answer }
+  )
     .then((result) => {
       res.json(result);
     })
@@ -42,7 +45,7 @@ router.patch("/:question", (req, res, next) => {
 });
 
 router.delete(":/question", (req, res, next) => {
-  Comment.remove({ id: req.params.id })
+  Comment.remove({ question: req.params.question })
     .then((result) => {
       res.json(result);
     })
